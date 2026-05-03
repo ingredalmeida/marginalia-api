@@ -50,6 +50,16 @@ Em resumo:
 
 O Compose **não** versiona segredos: use `backend/.env` para Mailtrap, produção, etc.
 
+### 1.4 Testes automatizados (backend)
+
+Suíte **pytest** sobre o contrato HTTP da API, com persistência em **SQLite em memória** (sem depender do Postgres do Compose). Cobre rotas públicas e autenticadas, regras de empréstimo e devolução, permissões de administrador no catálogo e fluxos de reserva.
+
+```bash
+cd backend && pip install -r requirements.txt && pytest
+```
+
+Cenários e documentação da pasta de testes: **[`backend/tests/README.md`](backend/tests/README.md)**.
+
 ---
 
 ## 2. Decisões arquiteturais
