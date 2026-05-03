@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 97%;
+    --foreground: 20 18% 15%;
+    --card: 40 25% 99%;
+    --card-foreground: 20 18% 15%;
+    --primary: 20 18% 15%;
+    --primary-foreground: 40 33% 97%;
+    --secondary: 35 20% 92%;
+    --secondary-foreground: 20 18% 15%;
+    --muted: 35 12% 90%;
+    --muted-foreground: 20 10% 42%;
+    --accent: 35 20% 92%;
+    --accent-foreground: 20 18% 15%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 40 33% 98%;
+    --border: 30 14% 88%;
+    --input: 30 14% 88%;
+    --ring: 12 68% 58%;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+}
