@@ -151,11 +151,6 @@ const Auth = () => {
                   maxLength={128}
                 />
               </div>
-              {mode === 'login' && (
-                <button type='button' className='text-xs text-muted-foreground hover:text-coral transition'>
-                  Esqueci a senha
-                </button>
-              )}
             </div>
 
             <Button

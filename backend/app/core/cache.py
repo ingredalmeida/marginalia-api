@@ -1,8 +1,10 @@
 """Redis cache keys and invalidation for book catalog reads."""
 
 import asyncio
+import logging
 
 from redis import Redis
+from redis.exceptions import RedisError
 
 BOOK_PREFIX = "lb:book:"
 LIST_PREFIX = "lb:books:"
@@ -25,8 +27,14 @@ def invalidate_book_catalog_cache(redis: Redis | None) -> None:
         redis.delete(key)
 
 
+_log = logging.getLogger(__name__)
+
+
 async def invalidate_book_catalog_cache_async(redis: Redis | None) -> None:
     """Non-blocking wrapper for async request handlers."""
     if redis is None:
         return
-    await asyncio.to_thread(invalidate_book_catalog_cache, redis)
+    try:
+        await asyncio.to_thread(invalidate_book_catalog_cache, redis)
+    except (RedisError, OSError) as e:
+        _log.warning("book_catalog_cache_invalidation_failed: %s", e)

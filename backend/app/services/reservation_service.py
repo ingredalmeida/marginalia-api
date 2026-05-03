@@ -342,10 +342,11 @@ async def expire_expired_reservation_holds(
         await notification_service.create_notification(
             session,
             uid,
-            "Prazo da reserva encerrado",
-            f"O prazo ({RESERVATION_HOLD_NOTIFICATION_DEADLINE_COPY}) para liberar vaga na estante acabou sem "
-            "devolução; o exemplar será oferecido ao próximo na fila ou liberado.",
+            "Reserva encerrada: prazo do hold",
+            "Você não liberou um lugar na estante dentro do prazo. Sua vez na fila deste exemplar foi cancelada; "
+            "o exemplar segue para a próxima pessoa na fila (empréstimo automático) ou fica disponível na estante.",
             kind="hold_expired",
+            ref_reservation_id=row.id,
         )
         await session.flush()
         await process_book_after_return(session, book_id, redis)
