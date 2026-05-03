@@ -44,6 +44,7 @@ Em resumo:
 
 - **`DATABASE_URL`**, **`REDIS_URL`**, **`JWT_SECRET_KEY`**, **`ACCESS_TOKEN_EXPIRE_MINUTES`**, **`JWT_ALGORITHM`**: autenticação e conexões.
 - **`CELERY_BROKER_URL`**: fila do Celery (no Compose dos workers costuma ser `redis://redis:6379/1`).
+- **Worker Celery e Redis:** além do broker (`CELERY_BROKER_URL`), o **worker** usa **`REDIS_URL`** para o mesmo Redis da API (índice **0**, cache e invalidação de catálogo). Sem `REDIS_URL` apontando para a instância correta (em Docker: `redis://redis:6379/0`, não `localhost`), tarefas que alteram dados e invalidam cache podem falhar antes do `commit`, por exemplo expiração de *hold* de reserva e lembretes que tocam o catálogo. O **`docker-compose.yml`** do repositório já define `REDIS_URL` no serviço `celery_worker`; em deploy próprio, replique **Postgres + `REDIS_URL` + broker** no ambiente do worker.
 - **`SMTP_*`**: se preenchido, o worker pode enviar e-mail de lembrete; sem `SMTP_HOST`, o envio por e-mail é ignorado (a API continua funcionando).
 - **`LOAN_REMINDER_WEBHOOK_URL`**: se definido, o worker também pode disparar um POST JSON por lembrete.
 - **`CORS_ORIGINS`**: origens permitidas (lista separada por vírgula); vazio desativa o middleware CORS (ver `backend/app/core/config.py`).
