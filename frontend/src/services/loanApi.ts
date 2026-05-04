@@ -12,6 +12,8 @@ export type LoanRead = {
   due_at: string;
   returned_at: string | null;
   fine_amount: string | null;
+  /** Ativo: multa estimada se devolver agora; devolvido: null (use fine_amount). */
+  projected_fine_brl: string | null;
   created_at: string;
   is_active: boolean;
   is_overdue: boolean;
@@ -38,6 +40,7 @@ function normalizeLoanFromApi(raw: Record<string, unknown>): LoanRead {
   const base = raw as unknown as LoanRead;
   return {
     ...base,
+    projected_fine_brl: base.projected_fine_brl ?? null,
     book_title: firstNonEmptyString(
       base.book_title,
       raw.book_title as string | undefined,

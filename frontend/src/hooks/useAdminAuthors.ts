@@ -110,7 +110,6 @@ export function useAdminAuthors() {
 
   const onDelete = async (id: number) => {
     if (!token) return;
-    if (!window.confirm('Excluir este autor? Só é possível se não houver livros vinculados.')) return;
     try {
       await deleteAuthor(token, id);
       setEditAuthor(null);

@@ -4,6 +4,8 @@ from enum import Enum
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
+from app.services.fine_preview import projected_fine_if_returned_now
+
 
 class LoanCreate(BaseModel):
     model_config = ConfigDict(json_schema_extra={"example": {"user_id": 1, "book_id": 1}})
@@ -47,6 +49,12 @@ class LoanRead(BaseModel):
         if due.tzinfo is None:
             due = due.replace(tzinfo=timezone.utc)
         return datetime.now(timezone.utc) > due
+
+    @computed_field
+    @property
+    def projected_fine_brl(self) -> Decimal | None:
+        """Empréstimo ativo: multa estimada se devolver agora (regra dos dias corridos). Devolvido: null (use fine_amount)."""
+        return projected_fine_if_returned_now(self.due_at, returned_at=self.returned_at)
 
 
 class LoanReturnResult(BaseModel):

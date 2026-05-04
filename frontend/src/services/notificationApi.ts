@@ -39,3 +39,13 @@ export async function markAllNotificationsRead(token: string): Promise<void> {
     throw new Error(await parseApiError(res));
   }
 }
+
+export async function clearAllNotifications(token: string): Promise<void> {
+  const res = await fetch(apiUrl('/api/v1/notifications/clear-all'), {
+    method: 'POST',
+    headers: authHeader(token),
+  });
+  if (!res.ok) {
+    throw new Error(await parseApiError(res));
+  }
+}

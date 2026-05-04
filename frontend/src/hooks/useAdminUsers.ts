@@ -94,7 +94,6 @@ export function useAdminUsers() {
 
   const onDelete = async (id: number) => {
     if (!token || id === userId) return;
-    if (!window.confirm('Excluir este usuário? Só é possível se não houver empréstimos vinculados.')) return;
     try {
       await deleteUser(token, id);
       await load();

@@ -175,7 +175,6 @@ export function useAdminBooks() {
 
   const onDelete = async (id: number) => {
     if (!token) return;
-    if (!window.confirm('Excluir este livro? Só é possível se não houver empréstimos.')) return;
     try {
       await deleteBook(token, id);
       setEditBook(null);

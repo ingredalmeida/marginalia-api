@@ -47,3 +47,12 @@ async def mark_all_read_route(
 ) -> None:
     await notification_service.mark_all_read(db, current.id)
     await db.commit()
+
+
+@router.post("/clear-all", status_code=204)
+async def clear_all_notifications_route(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current: Annotated[User, Depends(get_current_user)],
+) -> None:
+    await notification_service.delete_all_for_user(db, current.id)
+    await db.commit()

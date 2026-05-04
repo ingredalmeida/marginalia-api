@@ -5,7 +5,8 @@ import { useNotificationsPanel } from '@/hooks/useNotificationsPanel';
 import { formatNotificationWhen } from '@/lib/localeDateFormat';
 
 const NotificationsBell = () => {
-  const { token, wrapRef, open, setOpen, items, unread, loading, onMarkAllRead } = useNotificationsPanel();
+  const { token, wrapRef, open, setOpen, items, unread, loading, onMarkAllRead, onClearAll } =
+    useNotificationsPanel();
 
   if (!token) return null;
 
@@ -35,16 +36,28 @@ const NotificationsBell = () => {
         >
           <div className='flex items-center justify-between gap-2 px-4 py-3 border-b border-border'>
             <span className='text-sm font-medium text-ink'>Notificações</span>
-            {items.some((x) => !x.read_at) && (
-              <Button
-                type='button'
-                colorSchema='secondary'
-                className='text-xs h-8 px-3 rounded-lg'
-                onClick={() => void onMarkAllRead()}
-              >
-                Marcar lidas
-              </Button>
-            )}
+            <div className='flex items-center gap-1.5 shrink-0'>
+              {items.some((x) => !x.read_at) && (
+                <Button
+                  type='button'
+                  colorSchema='secondary'
+                  className='text-xs h-8 px-3 rounded-lg'
+                  onClick={() => void onMarkAllRead()}
+                >
+                  Marcar lidas
+                </Button>
+              )}
+              {items.length > 0 && (
+                <Button
+                  type='button'
+                  colorSchema='secondary'
+                  className='text-xs h-8 px-3 rounded-lg text-coral border-coral/40 hover:bg-coral/10'
+                  onClick={() => void onClearAll()}
+                >
+                  Limpar tudo
+                </Button>
+              )}
+            </div>
           </div>
           <div className='overflow-y-auto flex-1'>
             {loading && <p className='text-sm text-muted-foreground px-4 py-6'>Carregando…</p>}

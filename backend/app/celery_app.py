@@ -23,6 +23,14 @@ celery.conf.beat_schedule = {
         "task": "app.tasks.reminders.scan_loans_due_within_48_hours",
         "schedule": crontab(minute=0),
     },
+    "scan-loans-due-calendar-day": {
+        "task": "app.tasks.reminders.scan_loans_due_calendar_day",
+        "schedule": crontab(minute=0),
+    },
+    "scan-loans-overdue-fine-daily": {
+        "task": "app.tasks.reminders.scan_loans_overdue_fine_daily",
+        "schedule": crontab(minute=0),
+    },
     "expire-reservation-holds": {
         "task": "app.tasks.holds.expire_reservation_holds",
         "schedule": crontab(minute="*"),

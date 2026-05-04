@@ -141,7 +141,8 @@ Lembretes de **“vence nas próximas 48 horas”** rodam **no worker** (varredu
 ### 3.4 Empréstimos
 
 - Novo empréstimo respeitando limite por patrono, disponibilidade do exemplar e regras da fila de reserva (`POST /api/v1/loans`). Patrono só pode criar para si; **admin** pode informar outro `user_id`.
-- Devolução com cálculo de multa (`POST /api/v1/loans/{id}/return`).
+- Devolução com cálculo de multa (`POST /api/v1/loans/{id}/return`). A multa por atraso é **computada só na devolução** e gravada em `fine_amount`; não há cobrança automática nem notificação dedicada só de “multa”. O patrono vê o valor na **resposta da devolução** e no **histórico de empréstimos** na interface (empréstimos já devolvidos com multa).
+- Em empréstimos **ainda ativos**, a API expõe **`projected_fine_brl`** (estimativa se devolver naquele momento, mesma regra de dias corridos); o frontend mostra em **Meus empréstimos** e na página do livro quando há valor positivo.
 - Renovação (`POST /api/v1/loans/{id}/renew`) conforme regras da seção 2.4.
 - Listagem **global** de empréstimos com filtro `active` / `overdue` / `all` **somente admin** (`GET /api/v1/loans`). Patronos usam `GET /api/v1/users/{id}/loans` para o próprio histórico.
 
@@ -152,6 +153,7 @@ Lembretes de **“vence nas próximas 48 horas”** rodam **no worker** (varredu
 ### 3.6 Notificações (in-app)
 
 - Listar notificações recentes, contagem de não lidas, marcar uma ou todas como lidas (`/api/v1/notifications`).
+- Incluem eventos de **reserva** (fila, *hold*, expiração) e **lembretes de empréstimo** (in-app; e-mail e webhook só onde configurados): janela **48 h** antes do vencimento; **no dia do vencimento (UTC)** aviso sobre cobrança por atraso; **cada dia em atraso** (multa acumulada estimada, mesma regra da devolução).
 
 ### 3.7 Operação e staff
 
@@ -242,7 +244,31 @@ curl -s http://localhost:8000/health
 curl -s http://localhost:8000/health/ready
 ```
 
-### 4.7 Relatório em PDF (admin)
+### 4.7 Ajustes manuais no banco (Docker / testes)
+
+Com os containers no ar, abra o Postgres do projeto:
+
+```bash
+docker compose exec db psql -U library -d library
+```
+
+Exemplos úteis para testar **multa** (vencimento no passado em empréstimo ainda ativo) ou **lembrete de 48 h** (ajuste `id` do empréstimo):
+
+```sql
+-- Empréstimo ativo com vencimento ontem (ao devolver, multa = dias em atraso × R$ 2,00)
+UPDATE loans
+SET due_at = (CURRENT_TIMESTAMP AT TIME ZONE 'UTC') - interval '1 day'
+WHERE id = 1 AND returned_at IS NULL;
+
+-- Vence nas próximas horas (entra na varredura horária de lembrete + notificação in-app)
+UPDATE loans
+SET due_at = (CURRENT_TIMESTAMP AT TIME ZONE 'UTC') + interval '12 hours'
+WHERE id = 1 AND returned_at IS NULL;
+```
+
+Encerre com `\q`. Rode **`alembic upgrade head`** após puxar migrações novas. A multa só existe após **`POST .../return`**; até lá o exemplar pode aparecer como atrasado na UI.
+
+### 4.8 Relatório em PDF (admin)
 
 ```bash
 curl -s -L -H "$AUTH" -o inventario.pdf \

@@ -27,6 +27,8 @@ class LoanReminderLog(Base):
     reminder_kind: Mapped[str] = mapped_column(String(32), nullable=False)
     email_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     webhook_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    in_app_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    loan_due_at_utc_snapshot: Mapped[date | None] = mapped_column(Date(), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

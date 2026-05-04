@@ -105,6 +105,29 @@ const MyLoans = () => {
                     {loan.returned_at && (
                       <p className='text-xs text-muted-foreground mt-1'>Devolvido em {formatDateShortPtBr(loan.returned_at)}</p>
                     )}
+                    {loan.is_active &&
+                      loan.projected_fine_brl != null &&
+                      Number.parseFloat(String(loan.projected_fine_brl)) > 0 && (
+                        <p className='text-sm font-medium text-amber-900 mt-2'>
+                          Multa se devolver hoje: R${' '}
+                          {Number.parseFloat(String(loan.projected_fine_brl)).toLocaleString('pt-BR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}{' '}
+                          <span className='text-xs text-muted-foreground font-normal'>(R$ 2,00/dia civil)</span>
+                        </p>
+                      )}
+                    {loan.returned_at &&
+                      loan.fine_amount != null &&
+                      Number.parseFloat(String(loan.fine_amount)) > 0 && (
+                        <p className='text-sm font-medium text-coral mt-2'>
+                          Multa por atraso: R${' '}
+                          {Number.parseFloat(String(loan.fine_amount)).toLocaleString('pt-BR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </p>
+                      )}
                     <p
                       className={
                         loan.is_active && loan.is_overdue

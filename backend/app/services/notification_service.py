@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Notification
@@ -72,3 +72,10 @@ async def mark_all_read(session: AsyncSession, user_id: int) -> None:
     for n in rows.scalars():
         n.read_at = now
     await session.flush()
+
+
+async def delete_all_for_user(session: AsyncSession, user_id: int) -> int:
+    """Remove all notifications for the user. Returns deleted row count."""
+    result = await session.execute(delete(Notification).where(Notification.user_id == user_id))
+    await session.flush()
+    return int(result.rowcount or 0)

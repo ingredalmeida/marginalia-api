@@ -175,6 +175,17 @@ const BookDetail = () => {
                         </Button>
                       )}
                     </div>
+                    {myLoan.projected_fine_brl != null &&
+                      Number.parseFloat(String(myLoan.projected_fine_brl)) > 0 && (
+                        <p className='text-sm text-amber-900 font-medium'>
+                          Multa se devolver hoje: R${' '}
+                          {Number.parseFloat(String(myLoan.projected_fine_brl)).toLocaleString('pt-BR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}{' '}
+                          <span className='text-xs text-muted-foreground font-normal'>(acumulada por dia civil)</span>
+                        </p>
+                      )}
                     <Link to='/emprestimos' className='text-sm text-coral underline hover:text-ink'>
                       Ver em Meus empréstimos
                     </Link>

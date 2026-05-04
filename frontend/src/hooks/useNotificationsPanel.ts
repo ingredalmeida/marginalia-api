@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '@/hooks/useAuth';
 import {
+  clearAllNotifications,
   fetchNotifications,
   fetchUnreadNotificationCount,
   markAllNotificationsRead,
@@ -76,6 +77,17 @@ export function useNotificationsPanel() {
     }
   };
 
+  const onClearAll = async () => {
+    if (!token) return;
+    try {
+      await clearAllNotifications(token);
+      setItems([]);
+      await refreshUnread();
+    } catch {
+      /* ignore */
+    }
+  };
+
   return {
     token,
     wrapRef,
@@ -85,5 +97,6 @@ export function useNotificationsPanel() {
     unread,
     loading,
     onMarkAllRead,
+    onClearAll,
   };
 }
