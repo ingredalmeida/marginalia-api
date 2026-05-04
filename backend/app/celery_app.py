@@ -6,7 +6,7 @@ from celery.schedules import crontab
 from app.core.config import settings
 
 celery = Celery(
-    "labiblioteca",
+    "marginalia",
     broker=settings.celery_broker_url,
     include=["app.tasks.reminders", "app.tasks.holds"],
 )
