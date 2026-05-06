@@ -28,7 +28,7 @@ Com isso sobem PostgreSQL, Redis, a API (FastAPI), o worker e o agendador do Cel
 - **API:** http://localhost:8000  
 - **Swagger:** http://localhost:8000/docs  
 
-Na **primeira** subida com banco vazio, a API aplica as migrações e em seguida executa um *seed* de desenvolvimento (variável `SEED_DEV_DATA=true` no `docker-compose.yml`): ficam disponíveis um **administrador** (`admin@demo.marginalia.org` / `AdminSenha1`), um **patrono** de exemplo (`patron@demo.marginalia.org` / `PatronoSenha1`) e um pequeno catálogo (autores e exemplares). Os domínios são só para desenvolvimento (não enviam e-mail) e usam um host aceito pelo validador da API (`.local` é rejeitado). Se o admin já existir, o seed não altera o banco de novo. Para desligar esse preenchimento automático, remova `SEED_DEV_DATA` ou defina como vazio no serviço `api`.
+Na **primeira** subida com banco vazio, a API aplica as migrações e em seguida executa um *seed* de desenvolvimento (variável `SEED_DEV_DATA=true` no `docker-compose.yml`): ficam disponíveis um **administrador** (`admin@demo.marginalia.org` / `AdminSenha1`), um **patrono** de exemplo (`patron@demo.marginalia.org` / `PatronoSenha1`) e um pequeno catálogo (autores e exemplares). São endereços **fictícios de demo** (formato válido para o login na API; não são caixas postais reais). O validador rejeita domínios como `.local`. Se o admin já existir, o seed não altera o banco de novo. Para desligar esse preenchimento automático, remova `SEED_DEV_DATA` ou defina como vazio no serviço `api`.
 
 **Interface web (opcional):** com a API no ar, em outro terminal:
 
