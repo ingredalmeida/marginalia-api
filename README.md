@@ -28,6 +28,8 @@ Com isso sobem PostgreSQL, Redis, a API (FastAPI), o worker e o agendador do Cel
 - **API:** http://localhost:8000  
 - **Swagger:** http://localhost:8000/docs  
 
+Na **primeira** subida com banco vazio, a API aplica as migrações e em seguida executa um *seed* de desenvolvimento (variável `SEED_DEV_DATA=true` no `docker-compose.yml`): ficam disponíveis um **administrador** (`admin@demo.marginalia.org` / `AdminSenha1`), um **patrono** de exemplo (`patron@demo.marginalia.org` / `PatronoSenha1`) e um pequeno catálogo (autores e exemplares). Os domínios são só para desenvolvimento (não enviam e-mail) e usam um host aceito pelo validador da API (`.local` é rejeitado). Se o admin já existir, o seed não altera o banco de novo. Para desligar esse preenchimento automático, remova `SEED_DEV_DATA` ou defina como vazio no serviço `api`.
+
 **Interface web (opcional):** com a API no ar, em outro terminal:
 
 ```bash
@@ -191,7 +193,7 @@ AUTH="Authorization: Bearer $TOKEN"
 
 ### 4.2 Conceder perfil de administrador (operação no banco)
 
-Não há rota HTTP para isso. Exemplo em SQL (ajuste o e-mail):
+Com **`docker compose up`**, o usuário admin de demonstração já nasce com `is_admin` (veja o parágrafo sobre *seed* em **§1.2**). Não há rota HTTP para promover usuário; para **outros** e-mails criados via registro, use SQL (ajuste o e-mail):
 
 ```sql
 UPDATE users SET is_admin = true WHERE email = 'maria@example.com';

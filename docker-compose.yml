@@ -35,6 +35,7 @@ services:
       DATABASE_URL: postgresql+psycopg://library:library@db:5432/library
       REDIS_URL: redis://redis:6379/0
       JWT_SECRET_KEY: dev-only-change-me
+      SEED_DEV_DATA: "true"
     depends_on:
       db:
         condition: service_healthy
@@ -53,6 +54,7 @@ services:
     command: >
       sh -c "scripts/wait-for-db-dns.sh &&
              alembic upgrade head &&
+             python -m scripts.seed_dev_data &&
              uvicorn app.main:app --host 0.0.0.0 --port 8000"
 
   celery_worker:
